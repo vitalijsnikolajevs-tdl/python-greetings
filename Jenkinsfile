@@ -5,7 +5,10 @@ pipeline {
 
         stage('build-docker-image') {
             steps {
-                echo 'Building docker image'
+                echo 'Building python-greetings docker image'
+                sh 'docker build -t vnikolajevs/python-greetings-app:latest .'
+                echo 'Pushing python-greetings image to docker hub'
+                sh 'docker push vnikolajevs/python-greetings-app:latest'
             }
         }
 
