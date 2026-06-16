@@ -14,7 +14,11 @@ pipeline {
 
         stage('deploy-to-dev') {
             steps {
-                echo 'Deploying to dev'
+                echo 'Deploying python microservice to dev environment'
+                sh 'docker pull vnikolajevs/python-greetings-app:latest'
+                sh 'docker compose stop greetings-app-dev'
+                sh 'docker compose rm -f greetings-app-dev'
+                sh 'docker compose up -d greetings-app-dev'
             }
         }
 
