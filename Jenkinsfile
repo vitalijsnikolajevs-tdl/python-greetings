@@ -25,6 +25,7 @@ pipeline {
         stage('tests-on-dev') {
             steps {
                 echo 'Testing on dev'
+                sh 'docker run --rm vnikolajevs/api-tests:latest run greetings-dev'
             }
         }
 
@@ -41,6 +42,7 @@ pipeline {
         stage('tests-on-stg') {
             steps {
                 echo 'Testing on stg'
+                sh 'docker run --rm vnikolajevs/api-tests:latest run greetings-stg'
             }
         }
 
@@ -57,6 +59,7 @@ pipeline {
         stage('tests-on-prod') {
             steps {
                 echo 'Testing on prod'
+                sh 'docker run --rm vnikolajevs/api-tests:latest run greetings-prod'
             }
         }
     }
