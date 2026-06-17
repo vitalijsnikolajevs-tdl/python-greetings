@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.route('/greetings')
 def greetings():
-    return jsonify({"greeting": "Hello from new version of Python App!"})
+    return jsonify({"greeting": "Hello from Python App!"})
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
