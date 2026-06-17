@@ -30,7 +30,11 @@ pipeline {
 
         stage('deploy-to-stg') {
             steps {
-                echo 'Deploying to stg'
+                echo 'Deploying python microservice to stg environment'
+                sh 'docker pull vnikolajevs/python-greetings-app:latest'
+                sh 'docker compose stop greetings-app-stg'
+                sh 'docker compose rm -f greetings-app-stg'
+                sh 'docker compose up -d greetings-app-stg'
             }
         }
 
@@ -42,7 +46,11 @@ pipeline {
 
         stage('deploy-to-prod') {
             steps {
-                echo 'Deploying to prod'
+                echo 'Deploying python microservice to prod environment'
+                sh 'docker pull vnikolajevs/python-greetings-app:latest'
+                sh 'docker compose stop greetings-app-prod'
+                sh 'docker compose rm -f greetings-app-prod'
+                sh 'docker compose up -d greetings-app-prod'
             }
         }
 
