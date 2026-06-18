@@ -25,7 +25,8 @@ pipeline {
         stage('tests-on-dev') {
             steps {
                 echo 'Testing on dev'
-                sh 'docker run --rm vnikolajevs/api-tests:latest run greetings-dev'
+                sh 'docker pull vnikolajevs/api-tests:latest'
+                sh 'docker run --network=host --rm vnikolajevs/api-tests:latest run greetings greetings_dev'
             }
         }
 
@@ -42,7 +43,8 @@ pipeline {
         stage('tests-on-stg') {
             steps {
                 echo 'Testing on stg'
-                sh 'docker run --rm vnikolajevs/api-tests:latest run greetings-stg'
+                sh 'docker pull vnikolajevs/api-tests:latest'
+                sh 'docker run --network=host --rm vnikolajevs/api-tests:latest run greetings greetings_stg'
             }
         }
 
@@ -59,7 +61,8 @@ pipeline {
         stage('tests-on-prod') {
             steps {
                 echo 'Testing on prod'
-                sh 'docker run --rm vnikolajevs/api-tests:latest run greetings-prod'
+                sh 'docker pull vnikolajevs/api-tests:latest'
+                sh 'docker run --network=host --rm vnikolajevs/api-tests:latest run greetings greetings_prod'
             }
         }
     }
