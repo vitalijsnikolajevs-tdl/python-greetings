@@ -1,3 +1,15 @@
+def deploy(environment) {
+    sh 'docker pull vnikolajevs/python-greetings-app:latest'
+    sh "docker compose stop greetings-app-${environment}"
+    sh "docker compose rm -f greetings-app-${environment}"
+    sh "docker compose up -d greetings-app-${environment}"
+}
+
+def runTests(environment) {
+    sh 'docker pull vnikolajevs/api-tests:latest'
+    sh "docker run --network=host --rm vnikolajevs/api-tests:latest run greetings greetings_${environment}"
+}
+
 pipeline {
     agent any
 
@@ -7,6 +19,7 @@ pipeline {
             steps {
                 echo 'Building python-greetings docker image'
                 sh 'docker build -t vnikolajevs/python-greetings-app:latest .'
+
                 echo 'Pushing python-greetings image to docker hub'
                 sh 'docker push vnikolajevs/python-greetings-app:latest'
             }
@@ -15,54 +28,54 @@ pipeline {
         stage('deploy-to-dev') {
             steps {
                 echo 'Deploying python microservice to dev environment'
-                sh 'docker pull vnikolajevs/python-greetings-app:latest'
-                sh 'docker compose stop greetings-app-dev'
-                sh 'docker compose rm -f greetings-app-dev'
-                sh 'docker compose up -d greetings-app-dev'
+                script {
+                    deploy('dev')
+                }
             }
         }
 
         stage('tests-on-dev') {
             steps {
                 echo 'Testing on dev'
-                sh 'docker pull vnikolajevs/api-tests:latest'
-                sh 'docker run --network=host --rm vnikolajevs/api-tests:latest run greetings greetings_dev'
+                script {
+                    runTests('dev')
+                }
             }
         }
 
         stage('deploy-to-stg') {
             steps {
                 echo 'Deploying python microservice to stg environment'
-                sh 'docker pull vnikolajevs/python-greetings-app:latest'
-                sh 'docker compose stop greetings-app-stg'
-                sh 'docker compose rm -f greetings-app-stg'
-                sh 'docker compose up -d greetings-app-stg'
+                script {
+                    deploy('stg')
+                }
             }
         }
 
         stage('tests-on-stg') {
             steps {
                 echo 'Testing on stg'
-                sh 'docker pull vnikolajevs/api-tests:latest'
-                sh 'docker run --network=host --rm vnikolajevs/api-tests:latest run greetings greetings_stg'
+                script {
+                    runTests('stg')
+                }
             }
         }
 
         stage('deploy-to-prod') {
             steps {
                 echo 'Deploying python microservice to prod environment'
-                sh 'docker pull vnikolajevs/python-greetings-app:latest'
-                sh 'docker compose stop greetings-app-prod'
-                sh 'docker compose rm -f greetings-app-prod'
-                sh 'docker compose up -d greetings-app-prod'
+                script {
+                    deploy('prod')
+                }
             }
         }
 
         stage('tests-on-prod') {
             steps {
                 echo 'Testing on prod'
-                sh 'docker pull vnikolajevs/api-tests:latest'
-                sh 'docker run --network=host --rm vnikolajevs/api-tests:latest run greetings greetings_prod'
+                script {
+                    runTests('prod')
+                }
             }
         }
     }
